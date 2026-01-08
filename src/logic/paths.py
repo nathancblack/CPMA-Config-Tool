@@ -12,12 +12,12 @@ class PathManager:
             "gui_cfg": "",
             "game_exe": "",
         }
-
+        self.app_path = Path()
         self._create_app_folder()
 
     def set_path(self, path_name: str, path: Path):
         self.paths[path_name] = str(path)
-        with open("paths.json", "w") as f:
+        with open(self.app_path / "paths.json", "w") as f:
             json.dump(self.paths, f)
 
     def get_path(self, path_name: str):
@@ -37,11 +37,13 @@ class PathManager:
         path = os.getenv("LOCALAPPDATA")
         if path:
             path = Path(path) / "CPMA Config Tool"
+            self.app_path = path
             if not os.path.exists(path):
                 os.mkdir(path)
                 print(path)
             else:
                 print("Folder already exists")
+
         else:
             print("Could not find Local App Data")
 
@@ -72,4 +74,5 @@ root_folder_path = Path(
 autoexec_cfg_path = Path(
     "C:\\Users\\natha\\Programming Projects\\CPMA-Config-Tool\\assets\\q3\\cpma\\autoexec.cfg"
 )
-path_manager.handle_autoexec(autoexec_cfg_path)
+
+path_manager.auto_select_paths(root_folder_path)
