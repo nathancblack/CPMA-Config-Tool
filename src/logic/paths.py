@@ -1,6 +1,5 @@
 import json
 import os
-from enum import _auto_null
 from pathlib import Path
 
 
