@@ -1,5 +1,6 @@
 import json
 import os
+from enum import _auto_null
 from pathlib import Path
 
 
@@ -25,9 +26,13 @@ class PathManager:
             data = json.load(f)
             return Path(data.get(path_name))
 
-    def handle_autoexec(self, path: Path):
-        with open(path, "a") as f:
-            f.write("exec gui")
+    def handle_autoexec(self, autoexec_cfg_path: Path):
+        if not os.path.exists(autoexec_cfg_path):
+            open(autoexec_cfg_path, "x")
+
+        with open(autoexec_cfg_path, "r+") as f:
+            if "exec gui" not in f.read():
+                f.write("\nexec gui")
 
     def _create_app_folder(self):
         path = os.getenv("LOCALAPPDATA")
@@ -41,6 +46,31 @@ class PathManager:
         else:
             print("Could not find Local App Data")
 
+    def auto_select_paths(self, root_folder: Path):
+        missing = []
+        cpma_folder = root_folder / "cpma"
+        autoexec_cfg = cpma_folder / "autoexec.cfg"
+        paths = {"cpma_folder": cpma_folder, "autoexec_cfg": autoexec_cfg}
+        self.set_path("root_folder", root_folder)
+
+        for path in paths:
+            if os.path.exists(paths[path]):
+                self.set_path(path, paths[path])
+            else:
+                missing.append(path)
+
+        return missing
+
+
+# Testing
 
 path_manager = PathManager()
-# path_manager._create_app_folder()
+
+root_folder_path = Path(
+    "C:/Users/natha/Programming Projects/CPMA-Config-Tool/assets/q3"
+)
+
+autoexec_cfg_path = Path(
+    "C:\\Users\\natha\\Programming Projects\\CPMA-Config-Tool\\assets\\q3\\cpma\\autoexec.cfg"
+)
+path_manager.handle_autoexec(autoexec_cfg_path)
