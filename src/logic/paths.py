@@ -33,4 +33,14 @@ class PathManager:
         path = os.getenv("LOCALAPPDATA")
         if path:
             path = Path(path) / "CPMA Config Tool"
-            os.mkdir(path)
+            if not os.path.exists(path):
+                os.mkdir(path)
+                print(path)
+            else:
+                print("Folder already exists")
+        else:
+            print("Could not find Local App Data")
+
+
+path_manager = PathManager()
+# path_manager._create_app_folder()
