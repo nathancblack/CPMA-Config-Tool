@@ -1,8 +1,9 @@
 import json
+import os
 from pathlib import Path
 
 
-class PathsManager:
+class PathManager:
     def __init__(self):
         self.paths = {
             "root_folder": "",
@@ -12,12 +13,24 @@ class PathsManager:
             "game_exe": "",
         }
 
+        self._create_app_folder()
+
     def set_path(self, path_name: str, path: Path):
         self.paths[path_name] = str(path)
         with open("paths.json", "w") as f:
             json.dump(self.paths, f)
 
+    def get_path(self, path_name: str):
+        with open("paths.json", "r") as f:
+            data = json.load(f)
+            return Path(data.get(path_name))
 
-path_manager = PathsManager()
-path_manager.set_path("root_folder", Path("LWALKSDLKASN"))
-path_manager.set_path("cpma_folder", Path("Something"))
+    def handle_autoexec(self, path: Path):
+        with open(path, "a") as f:
+            f.write("exec gui")
+
+    def _create_app_folder(self):
+        path = os.getenv("LOCALAPPDATA")
+        if path:
+            path = Path(path) / "CPMA Config Tool"
+            os.mkdir(path)
