@@ -21,7 +21,7 @@ class PathManager:
             json.dump(self.paths, f)
 
     def get_path(self, path_name: str):
-        with open("paths.json", "r") as f:
+        with open(self.app_path / "paths.json", "r") as f:
             data = json.load(f)
             return Path(data.get(path_name))
 

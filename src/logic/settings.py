@@ -1,6 +1,6 @@
 MOUSE_SETTINGS = {
     "in_mouse": {
-        "value": None,
+        "value": 1,
         "type": "discrete",
         "options": ["0", "1", "2"],
         "game_default": "1",
@@ -95,7 +95,7 @@ MOUSE_SETTINGS = {
 
 VIDEO_SETTINGS = {
     "r_gamma": {
-        "value": None,
+        "value": 1,
         "type": "float",
         "min": 0.5,
         "max": 3.0,
