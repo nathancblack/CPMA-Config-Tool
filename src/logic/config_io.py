@@ -40,8 +40,7 @@ def cfg_to_dict(gui_path: Path):
         bind_dict = {}
         seta_matches = re.findall(r'seta\s+(\w+)\s+"(.*?)"', text)
         bind_matches = re.findall(r'bind\s+(\S+)\s+"(.*?)"', text)
-        # print(f"Seta matches: {seta_matches}")
-        # print(f"Bind matches: {bind_matches}")
+
         for setting, value in seta_matches:
             seta_dict[setting] = value
 
@@ -68,7 +67,7 @@ def test_read_write():
     dict_to_cfg(test_path)
 
 
-test_read_write()
+# test_read_write()
 
 
 def see_dict_values():
