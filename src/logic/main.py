@@ -3,8 +3,16 @@ from pathlib import Path
 from installer import InstallManager
 from paths import PathManager
 
-root_folder_path = Path(
+root_folder_path_windows = Path(
     "C:/Users/natha/Programming Projects/CPMA-Config-Tool/assets/q3"
+)
+
+project_assets = Path(
+    "/Users/nate/Programming/CPMA Config Tool/CPMA-Config-Tool/assets/"
+)
+
+root_folder_path_mac = Path(
+    "/Users/nate/Programming/CPMA Config Tool/CPMA-Config-Tool/assets/Quake III Arena"
 )
 
 autoexec_cfg_path = Path(
@@ -13,13 +21,13 @@ autoexec_cfg_path = Path(
 
 
 def main():
-    path_manager = PathManager()
+    path_manager = PathManager(project_assets)
     install_manager = InstallManager(path_manager)
 
-    path_manager.auto_select_paths(root_folder_path)
+    path_manager.auto_select_paths(root_folder_path_mac)
     # install_manager.install_assets()
 
-    install_manager.uninstall_assets()
+    # install_manager.uninstall_assets()
 
 
 main()

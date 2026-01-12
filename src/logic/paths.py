@@ -1,19 +1,21 @@
 import json
 import os
+import shutil
 from pathlib import Path
 
 
 class PathManager:
-    def __init__(self):
+    def __init__(self, location=None):
+        self.app_path = Path()
         self.paths = {
+            "app_folder": self.app_path,
             "root_folder": "",
             "cpma_folder": "",
             "autoexec_cfg": "",
             "gui_cfg": "",
             "game_exe": "",
         }
-        self.app_path = Path()
-        self._create_app_folder()
+        self._create_app_folder(location)
 
     def set_path(self, path_name: str, path: Path):
         self.paths[path_name] = str(path)
@@ -33,8 +35,8 @@ class PathManager:
             if "exec gui" not in f.read():
                 f.write("\nexec gui")
 
-    def _create_app_folder(self):
-        path = os.getenv("LOCALAPPDATA")
+    def _create_app_folder(self, location=None):
+        path = location
         if path:
             path = Path(path) / "CPMA Config Tool"
             self.app_path = path
@@ -43,9 +45,19 @@ class PathManager:
                 print(path)
             else:
                 print("Folder already exists")
-
         else:
-            print("Could not find Local App Data")
+            path = os.getenv("LOCALAPPDATA")
+            if path:
+                path = Path(path) / "CPMA Config Tool"
+                self.app_path = path
+                if not os.path.exists(path):
+                    os.mkdir(path)
+                    print(path)
+                else:
+                    print("Folder already exists")
+
+            else:
+                print("Could not find Local App Data")
 
     def auto_select_paths(self, root_folder: Path):
         missing = []
@@ -61,6 +73,15 @@ class PathManager:
                 missing.append(path)
 
         return missing
+
+    def change_app_folder_path(self, new_path: Path):
+        self.paths["app_folder"] = new_path
+
+        with open(self.app_path / "paths.json", "w") as f:
+            json.dump(self.paths, f)
+
+        shutil.move(self.app_path, new_path)
+        self.app_path = new_path
 
     def uninstall_all(self):
         os.remove(self.app_path)
