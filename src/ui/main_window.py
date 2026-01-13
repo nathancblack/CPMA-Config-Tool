@@ -1,0 +1,58 @@
+from tkinter import *
+from tkinter import ttk
+
+root = Tk()
+root.title("CPMA Config Tool")
+root.geometry("800x600")
+root.rowconfigure(0, weight=1)
+root.columnconfigure(0, weight=1)
+
+main_frame = ttk.Frame(root, padding=(10))
+main_frame.grid(row=0, column=0)
+main_frame.columnconfigure(2, weight=1)
+
+
+# TOP FRAME
+top_frame = ttk.Frame(main_frame, padding=10, relief="solid")
+top_frame.grid(row=0, column=0, sticky="n")
+
+ttk.Label(top_frame, text="Note: Settings with blank input boxes will default to the value in your own config").grid(row=0, column=0, sticky="w")
+ttk.Button(top_frame, text="Advanced Settings").grid(row=0, column=1, sticky="e", padx=(10,0))
+
+
+# SETTINGS NOTEBOOK
+settings_notebook = ttk.Notebook(main_frame)
+settings_notebook.grid(row=1, column=0)
+f1 = ttk.Frame(settings_notebook)
+f2 = ttk.Frame(settings_notebook)
+
+canvas1 = Canvas(f1)
+canvas2 = Canvas(f2)
+canvas1.grid(row=0, column=0, sticky="nsew")
+canvas2.grid(row=0, column=0, sticky="nsew")
+
+scrollbar1 = ttk.Scrollbar(f1, orient="vertical", command=canvas1.yview)
+scrollbar2 = ttk.Scrollbar(f2, orient="vertical", command=canvas2.yview)
+scrollbar1.grid(row=0, column=1, sticky="ns")
+scrollbar2.grid(row=0, column=1, sticky="ns")
+
+scrollable_frame1 = ttk.Frame(canvas1)
+scrollable_frame2 = ttk.Frame(canvas2)
+
+canvas1.create_window((0, 0), window=scrollable_frame1, anchor="nw")
+canvas2.create_window((0, 0), window=scrollable_frame2, anchor="nw")
+
+label1 = ttk.Label(scrollable_frame1, text="Line 1\n\n\nLine 2\n\n\nLine 3\n\n\nLine 4\n\n\nLine 5\n\n\nLine 1\n\n\nLine 2\n\n\nLine 3\n\n\nLine 4\n\n\nLine 5\n\n\nLine 1\n\n\nLine 2\n\n\nLine 3\n\n\nLine 4\n\n\nLine 5\n\n\nLine 1\n\n\nLine 2\n\n\nLine 3\n\n\nLine 4\n\n\nLast Line").grid(row=0, column=0)
+label2 = ttk.Label(scrollable_frame2, text="Tab 2").grid(row=0, column=0)
+
+settings_notebook.add(f1, text='One')
+settings_notebook.add(f2, text='Two')
+
+
+# Sets scrollregion once all widgets are added
+scrollable_frame1.update_idletasks()
+canvas1.configure(yscrollcommand=scrollbar1.set, scrollregion=canvas1.bbox("all"))
+canvas2.configure(yscrollcommand=scrollbar2.set, scrollregion=canvas2.bbox("all"))
+
+
+root.mainloop()
