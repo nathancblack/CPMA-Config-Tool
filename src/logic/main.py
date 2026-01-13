@@ -13,12 +13,14 @@ autoexec_cfg_path = Path(
 
 
 def main():
+    # Initialize
     path_manager = PathManager()
     install_manager = InstallManager(path_manager)
 
+    # Tests
     path_manager.auto_select_paths(root_folder_path)
-    # install_manager.install_assets()
 
+    # install_manager.install_assets()
     install_manager.uninstall_assets()
 
 
