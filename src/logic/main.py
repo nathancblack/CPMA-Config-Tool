@@ -28,12 +28,14 @@ def main():
     path_manager = PathManager(project_assets_windows)
     install_manager = InstallManager(path_manager)
 
-    path_manager.auto_select_paths(root_folder_path_windows)
-
-    install_manager.test()
-    # install_manager.install_assets()
+    # path_manager.auto_select_paths(root_folder_path_windows)
+    # install_manager.install_assets(project_assets_windows)
 
     # install_manager.uninstall_assets()
+
+    # install_manager.uninstall_all()
+
+    # install_manager.change_assets_location(Path(project_assets_windows / "new"))
 
 
 main()

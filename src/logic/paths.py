@@ -8,7 +8,6 @@ class PathManager:
     def __init__(self, location=None):
         self.app_path = Path()
         self.paths = {
-            "app_folder": str(self.app_path),
             "root_folder": "",
             "cpma_folder": "",
             "autoexec_cfg": "",
@@ -16,17 +15,24 @@ class PathManager:
             "game_exe": "",
             "assets": "",
         }
-        self._create_app_folder(location)
+        self._create_app_folder()
 
     def set_path(self, path_name: str, path: Path):
         self.paths[path_name] = str(path)
-        with open(self.app_path / "paths.json", "w") as f:
-            json.dump(self.paths, f)
+        self.update_paths_json()
 
     def get_path(self, path_name: str):
         with open(self.app_path / "paths.json", "r") as f:
             data = json.load(f)
             return Path(data.get(path_name))
+
+    def update_paths_json(self):
+        with open(self.app_path / "paths.json", "w") as f:
+            json.dump(self.paths, f)
+
+    def update_paths_dict(self):
+        with open(self.app_path / "paths.json", "r") as f:
+            self.paths = json.load(f)
 
     def handle_autoexec(self, autoexec_cfg_path: Path):
         if not os.path.exists(autoexec_cfg_path):
@@ -36,8 +42,8 @@ class PathManager:
             if "exec gui" not in f.read():
                 f.write("\nexec gui")
 
-    def _create_app_folder(self, location=None):
-        path = location
+    def _create_app_folder(self):
+        path = os.getenv("LOCALAPPDATA")
         if path:
             path = Path(path) / "CPMA Config Tool"
             self.app_path = path
@@ -46,19 +52,9 @@ class PathManager:
                 print(path)
             else:
                 print("Folder already exists")
-        else:
-            path = os.getenv("LOCALAPPDATA")
-            if path:
-                path = Path(path) / "CPMA Config Tool"
-                self.app_path = path
-                if not os.path.exists(path):
-                    os.mkdir(path)
-                    print(path)
-                else:
-                    print("Folder already exists")
 
-            else:
-                print("Could not find Local App Data")
+        else:
+            print("Could not find Local App Data")
 
     def auto_select_paths(self, root_folder: Path):
         missing = []
@@ -77,6 +73,3 @@ class PathManager:
 
     def change_assets_location(self, location: Path):
         shutil.move(Path(self.paths["assets"]), Path(location))
-
-    def uninstall_all(self):
-        os.remove(self.app_path)
