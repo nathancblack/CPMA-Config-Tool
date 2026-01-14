@@ -82,7 +82,7 @@ canvas2.configure(yscrollcommand=scrollbar2.set, scrollregion=canvas2.bbox("all"
 
 # Enable mousewheel scrolling anywhere in the Frame
 def on_mousewheel(event):
-    canvas.yview_scroll(-1 * (event.delta // 120), "units")
+    canvas1.yview_scroll(-1 * (event.delta // 120), "units")
 
 canvas1.bind_all("<MouseWheel>", on_mousewheel)
 
