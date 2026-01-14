@@ -8,12 +8,13 @@ class PathManager:
     def __init__(self, location=None):
         self.app_path = Path()
         self.paths = {
-            "app_folder": self.app_path,
+            "app_folder": str(self.app_path),
             "root_folder": "",
             "cpma_folder": "",
             "autoexec_cfg": "",
             "gui_cfg": "",
             "game_exe": "",
+            "assets": "",
         }
         self._create_app_folder(location)
 
@@ -74,14 +75,8 @@ class PathManager:
 
         return missing
 
-    def change_app_folder_path(self, new_path: Path):
-        self.paths["app_folder"] = new_path
-
-        with open(self.app_path / "paths.json", "w") as f:
-            json.dump(self.paths, f)
-
-        shutil.move(self.app_path, new_path)
-        self.app_path = new_path
+    def change_assets_location(self, location: Path):
+        shutil.move(Path(self.paths["assets"]), Path(location))
 
     def uninstall_all(self):
         os.remove(self.app_path)

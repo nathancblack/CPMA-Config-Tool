@@ -7,7 +7,11 @@ root_folder_path_windows = Path(
     "C:/Users/natha/Programming Projects/CPMA-Config-Tool/assets/q3"
 )
 
-project_assets = Path(
+project_assets_windows = Path(
+    "C:\\Users\\natha\\Programming Projects\\CPMA-Config-Tool\\assets"
+)
+
+project_assets_mac = Path(
     "/Users/nate/Programming/CPMA Config Tool/CPMA-Config-Tool/assets/"
 )
 
@@ -21,10 +25,12 @@ autoexec_cfg_path = Path(
 
 
 def main():
-    path_manager = PathManager(project_assets)
+    path_manager = PathManager(project_assets_windows)
     install_manager = InstallManager(path_manager)
 
-    path_manager.auto_select_paths(root_folder_path_mac)
+    path_manager.auto_select_paths(root_folder_path_windows)
+
+    install_manager.test()
     # install_manager.install_assets()
 
     # install_manager.uninstall_assets()
