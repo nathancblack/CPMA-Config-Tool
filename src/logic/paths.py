@@ -70,6 +70,3 @@ class PathManager:
                 missing.append(path)
 
         return missing
-
-    def change_assets_location(self, location: Path):
-        shutil.move(Path(self.paths["assets"]), Path(location))
