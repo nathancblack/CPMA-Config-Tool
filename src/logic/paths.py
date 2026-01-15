@@ -1,6 +1,6 @@
 import json
 import os
-import shutil
+import subprocess
 from pathlib import Path
 
 
@@ -70,3 +70,7 @@ class PathManager:
                 missing.append(path)
 
         return missing
+
+    def launch_game(self):
+        self.update_paths_dict()
+        subprocess.run(self.paths["game_exe"])

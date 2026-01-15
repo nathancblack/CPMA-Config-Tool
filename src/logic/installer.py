@@ -1,4 +1,3 @@
-import json
 import os
 import shutil
 from pathlib import Path
@@ -27,6 +26,8 @@ class InstallManager:
         self.data.update_paths_dict()
         shutil.move(self.data.paths["assets"], destination)
         self.data.paths["assets"] = str(Path(destination / "content"))
+        # How to handle updating paths.json?
+        # Call auto_select_paths() here or UI ?
         self.data.update_paths_json()
 
     def uninstall_assets(self):
