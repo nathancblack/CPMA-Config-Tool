@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
+from src.logic.settings import ALL_SETTINGS
+
 root = tk.Tk()
 root.title("CPMA Config Tool")
 root.geometry("800x600")
@@ -31,38 +33,37 @@ ttk.Button(top_frame, text="Advanced Settings").grid(row=0, column=1, sticky="e"
 # SETTINGS NOTEBOOK
 settings_notebook = ttk.Notebook(main_frame)
 settings_notebook.grid(row=1, column=0, sticky="nsew", pady=10)
-
-f1 = ttk.Frame(settings_notebook)
-f2 = ttk.Frame(settings_notebook)
-
-f1.rowconfigure(0, weight=1)
-f1.columnconfigure(0, weight=1)
-
-f2.rowconfigure(0, weight=1)
-f2.columnconfigure(0, weight=1)
-
-canvas1 = tk.Canvas(f1)
-canvas2 = tk.Canvas(f2)
-canvas1.grid(row=0, column=0, sticky="nsew")
-canvas2.grid(row=0, column=0, sticky="nsew")
 settings_notebook.columnconfigure(0, weight=1)
 
-scrollbar1 = ttk.Scrollbar(f1, orient="vertical", command=canvas1.yview)
-scrollbar2 = ttk.Scrollbar(f2, orient="vertical", command=canvas2.yview)
-scrollbar1.grid(row=0, column=1, sticky="nse")
-scrollbar2.grid(row=0, column=1, sticky="nse")
+# Generates notebook tab titles and contents
+frames = []
+canvases = []
+scrollbars = []
+scrollable_frames = []
+labels = []
+for i, (title, _) in enumerate(ALL_SETTINGS):
+    frame = ttk.Frame(settings_notebook)
+    frame.rowconfigure(0, weight=1)
+    frame.columnconfigure(0, weight=1)
+    frames.append(frame)
+    settings_notebook.add(frame, text=title)
 
-scrollable_frame1 = ttk.Frame(canvas1, padding=10)
-scrollable_frame2 = ttk.Frame(canvas2, padding=10)
+    canvas = tk.Canvas(frames[i])
+    canvas.grid(row=0, column=0, sticky="nsew")
+    canvases.append(canvas)
 
-canvas1.create_window((0, 0), window=scrollable_frame1, anchor="nw")
-canvas2.create_window((0, 0), window=scrollable_frame2, anchor="nw")
+    scrollbar = ttk.Scrollbar(frames[i], orient="vertical", command=(canvases[i]).yview)
+    scrollbar.grid(row=0, column=1, sticky="nse")
+    scrollbars.append(scrollbar)
 
-label1 = ttk.Label(scrollable_frame1, text="Line 1\nLine 2\n\n\nLine 3\n\n\nLine 4\n\n\nLine 5\n\n\nLine 1\n\n\nLine 2\n\n\nLine 3\n\n\nLine 4\n\n\nLine 5\n\n\nLine 1\n\n\nLine 2\n\n\nLine 3\n\n\nLine 4\n\n\nLine 5\n\n\nLine 1\n\n\nLine 2\n\n\nLine 3\n\n\nLine 4\n\n\nLast Line").grid(row=0, column=0)
-label2 = ttk.Label(scrollable_frame2, text="Tab 2").grid(row=0, column=0)
+    scrollable_frame = ttk.Frame(canvases[i], padding=10)
+    scrollable_frames.append(scrollable_frame)
+    canvases[i].create_window((0, 0), window=scrollable_frames[i], anchor="nw")
 
-settings_notebook.add(f1, text='One')
-settings_notebook.add(f2, text='Two')
+    for x in range(100):
+        label = ttk.Label(scrollable_frames[i], text=f"Tab {i}, Line {x}")
+        labels.append(label)
+        label.grid(row=x, column=0)
 
 
 # BOTTOM FRAME
@@ -77,15 +78,15 @@ ttk.Button(bottom_frame, text="Launch Game").grid(row=0, column=2)
 
 
 # Sets scrollregion once all widgets are added
-scrollable_frame1.update_idletasks()
-canvas1.configure(yscrollcommand=scrollbar1.set, scrollregion=canvas1.bbox("all"))
-canvas2.configure(yscrollcommand=scrollbar2.set, scrollregion=canvas2.bbox("all"))
-
+for i, (title, _) in enumerate(ALL_SETTINGS):
+    scrollable_frames[i].update_idletasks()
+    canvases[i].configure(yscrollcommand=scrollbars[i].set, scrollregion=canvases[i].bbox("all"))
 
 # Enable mousewheel scrolling anywhere in the Frame
-def on_mousewheel(event):
-    canvas1.yview_scroll(-1 * (event.delta // 120), "units")
+for i, (title, _) in enumerate(ALL_SETTINGS):
+    def on_mousewheel(event):
+        (canvases[i]).yview_scroll(-1 * (event.delta // 120), "units")
+    (canvases[i]).bind_all("<MouseWheel>", on_mousewheel)
 
-canvas1.bind_all("<MouseWheel>", on_mousewheel)
 
 root.mainloop()
