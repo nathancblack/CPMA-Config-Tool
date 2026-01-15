@@ -76,17 +76,18 @@ ttk.Button(bottom_frame, text="Export Config").grid(row=0, column=1, padx=(0,5))
 ttk.Button(bottom_frame, text="Launch Game").grid(row=0, column=2)
 
 
-
 # Sets scrollregion once all widgets are added
-for i, (title, _) in enumerate(ALL_SETTINGS):
+for i in range(len(scrollable_frames)):
     scrollable_frames[i].update_idletasks()
     canvases[i].configure(yscrollcommand=scrollbars[i].set, scrollregion=canvases[i].bbox("all"))
 
-# Enable mousewheel scrolling anywhere in the Frame
-for i, (title, _) in enumerate(ALL_SETTINGS):
-    def on_mousewheel(event):
-        (canvases[i]).yview_scroll(-1 * (event.delta // 120), "units")
-    (canvases[i]).bind_all("<MouseWheel>", on_mousewheel)
+# Allows the user to scroll anywhere in the Notebook
+def on_mousewheel(event):
+    for canvas in canvases:
+        canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+for canvas in canvases:
+    canvas.bind_all("<MouseWheel>", on_mousewheel)
 
 
 root.mainloop()
