@@ -7,8 +7,10 @@ root.geometry("800x600")
 root.rowconfigure(0, weight=1)
 root.columnconfigure(0, weight=1)
 
-#style = ttk.Style()
-#style.theme_use('clam')
+style = ttk.Style()
+style.theme_use('clam')
+style.configure("TNotebook.Tab", width=200)
+
 
 main_frame = ttk.Frame(root, padding=(10))
 main_frame.grid(row=0, column=0, sticky="nsew")
@@ -17,7 +19,7 @@ main_frame.columnconfigure(0, weight=1)
 
 
 # TOP FRAME
-top_frame = ttk.Frame(main_frame, padding=10, relief="solid")
+top_frame = ttk.Frame(main_frame, padding=10, relief="ridge")
 top_frame.grid(row=0, column=0, sticky="nsew")
 top_frame.columnconfigure(0, weight=1)
 
