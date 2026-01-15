@@ -872,3 +872,13 @@ KEYBIND_SETTINGS = {
     "timeout;play sound/misc/menu3": {"value": None, "label": "Take Timeout"},
     "timein;play sound/misc/menu2": {"value": None, "label": "Withdraw Timeout"},
 }
+
+ALL_SETTINGS = [
+    ("Mouse", MOUSE_SETTINGS),
+    ("Video", VIDEO_SETTINGS),
+    ("Audio", AUDIO_SETTINGS),
+    ("HUD", HUD_SETTINGS),
+    ("Player", PLAYER_SETTINGS),
+    ("Weapons", WEAPON_SETTINGS),
+    ("Keybinds", KEYBIND_SETTINGS),
+]
