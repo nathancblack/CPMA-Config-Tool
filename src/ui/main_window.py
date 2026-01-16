@@ -59,14 +59,13 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
     scrollable_frame = ttk.Frame(canvases[i], padding=10)
     scrollable_frames.append(scrollable_frame)
     canvases[i].create_window((0, 0), window=scrollable_frames[i], anchor="nw")
-    
+
     # generates each setting label
     for i2, setting in enumerate(dictionary):
         setting_label = ttk.Label(scrollable_frames[i], text=dictionary[setting]["label"])
         setting_labels.append(setting_label)
         setting_label.grid(row=i2+2, column=0)
-        if dictionary[setting]["type"] == "float":
-
+        #if dictionary[setting]["type"] == "float":
 
 
 # BOTTOM FRAME
