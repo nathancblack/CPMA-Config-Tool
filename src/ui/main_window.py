@@ -40,8 +40,8 @@ frames = []
 canvases = []
 scrollbars = []
 scrollable_frames = []
-labels = []
-for i, (title, _) in enumerate(ALL_SETTINGS):
+setting_labels = []
+for i, (title, dictionary) in enumerate(ALL_SETTINGS):
     frame = ttk.Frame(settings_notebook)
     frame.rowconfigure(0, weight=1)
     frame.columnconfigure(0, weight=1)
@@ -59,11 +59,14 @@ for i, (title, _) in enumerate(ALL_SETTINGS):
     scrollable_frame = ttk.Frame(canvases[i], padding=10)
     scrollable_frames.append(scrollable_frame)
     canvases[i].create_window((0, 0), window=scrollable_frames[i], anchor="nw")
+    
+    # generates each setting label
+    for i2, setting in enumerate(dictionary):
+        setting_label = ttk.Label(scrollable_frames[i], text=dictionary[setting]["label"])
+        setting_labels.append(setting_label)
+        setting_label.grid(row=i2+2, column=0)
+        if dictionary[setting]["type"] == "float":
 
-    for x in range(100):
-        label = ttk.Label(scrollable_frames[i], text=f"Tab {i}, Line {x}")
-        labels.append(label)
-        label.grid(row=x, column=0)
 
 
 # BOTTOM FRAME
