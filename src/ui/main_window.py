@@ -59,13 +59,34 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
     scrollable_frame = ttk.Frame(canvases[i], padding=10)
     scrollable_frames.append(scrollable_frame)
     canvases[i].create_window((0, 0), window=scrollable_frames[i], anchor="nw")
+    canvases[i].grid(padx=10, pady=(30,10))
 
-    # generates each setting label
+
+    # scrollable_frame widget generation
     for i2, setting in enumerate(dictionary):
-        setting_label = ttk.Label(scrollable_frames[i], text=dictionary[setting]["label"])
-        setting_labels.append(setting_label)
-        setting_label.grid(row=i2+2, column=0)
-        #if dictionary[setting]["type"] == "float":
+        # generates each setting label
+        label = ttk.Label(scrollable_frames[i], font=("TkDefaultFont", 10, "bold"), text=dictionary[setting]["label"])
+        label.grid(row=(i2*2), column=0, sticky="w")
+
+        # generates each setting description
+        desc = ttk.Label(scrollable_frames[i], text=dictionary[setting].get("description"))
+        desc.grid(row=(i2*2), column=1, sticky="w", padx=(40,0))
+
+        # generates each setting option_box
+        if dictionary[setting].get("type") == "discrete":
+            option_box = ttk.Combobox(scrollable_frames[i], values=([""] + dictionary[setting]["options"]), width=15)
+        elif dictionary[setting].get("type") == "bool":
+            option_box = ttk.Combobox(scrollable_frames[i], values=["","0","1"], width=15)
+        elif dictionary[setting].get("type") == "float" or "string":
+            option_box = ttk.Entry(scrollable_frames[i], width=15)
+        elif dictionary[setting].get("type") == "int":
+            option_box = ttk.Entry(scrollable_frames[i], width=15)
+
+        # add vertical padding to the option_box unless its the last option_box in a tab
+        if i2 == len(dictionary)-1:
+            option_box.grid(row=(i2*2)+1, column=0, sticky="ew")
+        else:
+            option_box.grid(row=(i2*2)+1, column=0, sticky="ew", pady=(0,20))
 
 
 # BOTTOM FRAME
