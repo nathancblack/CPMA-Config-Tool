@@ -11,7 +11,7 @@ root.columnconfigure(0, weight=1)
 
 style = ttk.Style()
 style.theme_use('clam')
-style.configure("TNotebook.Tab", width=200)
+style.configure("TNotebook.Tab", width=200, anchor="center")
 
 
 main_frame = ttk.Frame(root, padding=(10))
@@ -40,7 +40,7 @@ frames = []
 canvases = []
 scrollbars = []
 scrollable_frames = []
-setting_labels = []
+
 for i, (title, dictionary) in enumerate(ALL_SETTINGS):
     frame = ttk.Frame(settings_notebook)
     frame.rowconfigure(0, weight=1)
