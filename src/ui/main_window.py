@@ -108,7 +108,7 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
 
 
 # BOTTOM FRAME
-bottom_frame = ttk.Frame(main_frame)
+bottom_frame = ttk.Frame(main_frame, style="white.TFrame")
 bottom_frame.grid(row=2, column=0, sticky="e")
 bottom_frame.columnconfigure(0, weight=1)
 
