@@ -27,6 +27,42 @@ main_frame.grid(row=0, column=0, sticky="nsew")
 main_frame.rowconfigure(1, weight=1)
 main_frame.columnconfigure(0, weight=1)
 
+def open_advanced_settings():
+    advanced_settings = tk.Toplevel(root)
+    advanced_settings.title("Advanced Settings")
+    advanced_settings.geometry("400x300")
+    advanced_settings.rowconfigure(0, weight=1)
+    advanced_settings.columnconfigure(0, weight=1)
+
+    main_frame = ttk.Frame(advanced_settings, padding=10, style="white.TFrame")
+    main_frame.grid(row=0, column=0, sticky="nsew")
+    main_frame.rowconfigure(0, weight=1)
+    main_frame.rowconfigure(1, weight=1)
+    main_frame.rowconfigure(2, weight=1)
+    main_frame.columnconfigure(0, weight=1)
+
+
+    frame1 = ttk.Frame(main_frame, padding=10, relief="ridge")
+    frame1.grid(row=0, column=0, sticky="nsew", pady=(0,10))
+    frame1.columnconfigure(0, weight=1)
+    ttk.Label(frame1, text="Current CPMA Path").grid(row=0, column=0, sticky="ew", pady=(0,5))
+    ttk.Button(frame1, text="Change CPMA Location").grid(row=1, column=0, sticky="ew")
+
+    frame2 = ttk.Frame(main_frame, padding=10, relief="ridge")
+    frame2.grid(row=1, column=0, sticky="nsew", pady=(0,10))
+    frame2.columnconfigure(0, weight=1)
+    ttk.Button(frame2, text="Install Game Assets").grid(row=0, column=0, sticky="ew", pady=(0,5))
+    ttk.Label(frame2, text="Installs Quake 3 + CPMA files to your APPDATA folder", font=("TkDefaultFont", 8, "italic")).grid(row=1, column=0, sticky="ew")
+
+    frame3 =ttk.Frame(main_frame, padding=10, relief="ridge")
+    frame3.grid(row=2, column=0, sticky="nsew")
+    frame3.columnconfigure(0, weight=1)
+    ttk.Button(frame3, text="Uninstall CPMA Config Tool").grid(row=0, column=0, sticky="ew", pady=(0,5))
+    ttk.Label(frame3, text="Completely removes the Config Tool and associated AppData", font=("TkDefaultFont", 8, "italic")).grid(row=1, column=0, sticky="ew")
+
+
+
+
 
 # TOP FRAME
 top_frame = ttk.Frame(main_frame, padding=10, relief="ridge")
@@ -35,7 +71,7 @@ top_frame.columnconfigure(0, weight=1)
 
 
 ttk.Label(top_frame, text="Settings with blank input boxes will default to the value in your own config").grid(row=0, column=0, sticky="w")
-ttk.Button(top_frame, text="Advanced Settings").grid(row=0, column=1, sticky="e")
+ttk.Button(top_frame, text="Advanced Settings", command=open_advanced_settings).grid(row=0, column=1, sticky="e")
 
 
 # SETTINGS NOTEBOOK
