@@ -127,7 +127,9 @@ def on_mousewheel(event):
     # Only scroll if cavas is taller than visible area
     if canvas.bbox("all") and canvas.bbox("all")[3] > canvas.winfo_height():
         canvas.yview_scroll(-1 * (event.delta // 120), "units")
+    return "break"
 
 root.bind_all("<MouseWheel>", on_mousewheel)
+root.unbind_class("TScrollbar", "<MouseWheel>")
 
 root.mainloop()
