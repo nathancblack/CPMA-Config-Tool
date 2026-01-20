@@ -12,6 +12,8 @@ root.columnconfigure(0, weight=1)
 style = ttk.Style()
 style.theme_use('clam')
 style.configure("TNotebook.Tab", width=200, anchor="center", focuscolor="")
+style.configure("TNotebook", background="#f3f3f3")
+style.configure("white.TFrame", background="#f3f3f3")
 bg_color = style.lookup('TFrame', 'background')
 
 style.map('TCombobox',
@@ -20,7 +22,7 @@ style.map('TCombobox',
     selectforeground=[("readonly", "black")]
 )
 
-main_frame = ttk.Frame(root, padding=(10))
+main_frame = ttk.Frame(root, padding=(10), style="white.TFrame")
 main_frame.grid(row=0, column=0, sticky="nsew")
 main_frame.rowconfigure(1, weight=1)
 main_frame.columnconfigure(0, weight=1)
