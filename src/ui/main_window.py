@@ -94,7 +94,7 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
         else:
             option_box.grid(row=(i2*2)+1, column=0, sticky="ew", pady=(0,20))
 
-        # generates range and default value for applicable settings
+        # generates option_box range and default value for applicable settings
         if dictionary[setting].get("game_default"):
             default = f"Default: {dictionary[setting].get("game_default")}"
             if dictionary[setting].get("min") and dictionary[setting].get("max"):
@@ -114,18 +114,20 @@ ttk.Button(bottom_frame, text="Save Config").grid(row=0, column=0, padx=(0,5))
 ttk.Button(bottom_frame, text="Export Config").grid(row=0, column=1, padx=(0,5))
 ttk.Button(bottom_frame, text="Launch Game").grid(row=0, column=2)
 
+
 # Sets scrollregion once all widgets are added
 for i, frame in enumerate(scrollable_frames):
     scrollable_frames[i].update_idletasks()
     canvases[i].configure(yscrollcommand=scrollbars[i].set, scrollregion=canvases[i].bbox("all"))
 
-# Allows the user to scroll anywhere in the Notebook
+# Allows the user to scroll anywhere in the canvas
 def on_mousewheel(event):
-    for canvas in canvases:
+    current_tab = settings_notebook.index(settings_notebook.select())
+    canvas = canvases[current_tab]
+    # Only scroll if cavas is taller than visible area
+    if canvas.bbox("all") and canvas.bbox("all")[3] > canvas.winfo_height():
         canvas.yview_scroll(-1 * (event.delta // 120), "units")
 
-for canvas in canvases:
-    canvas.bind_all("<MouseWheel>", on_mousewheel)
-
+root.bind_all("<MouseWheel>", on_mousewheel)
 
 root.mainloop()
