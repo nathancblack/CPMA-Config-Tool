@@ -94,6 +94,16 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
         else:
             option_box.grid(row=(i2*2)+1, column=0, sticky="ew", pady=(0,20))
 
+        # generates range and default value for applicable settings
+        if dictionary[setting].get("game_default"):
+            default = f"Default: {dictionary[setting].get("game_default")}"
+            if dictionary[setting].get("min") and dictionary[setting].get("max"):
+                range = f"Range: {dictionary[setting].get("min")} to {dictionary[setting].get("max")}"
+                label2 = ttk.Label(scrollable_frames[i], text=f"{range}, {default}")
+            else:
+                label2 = ttk.Label(scrollable_frames[i], text=default)
+            label2.grid(row=(i2*2)+1, column=1, sticky="nw", padx=(40,0))
+
 
 # BOTTOM FRAME
 bottom_frame = ttk.Frame(main_frame)
@@ -104,9 +114,8 @@ ttk.Button(bottom_frame, text="Save Config").grid(row=0, column=0, padx=(0,5))
 ttk.Button(bottom_frame, text="Export Config").grid(row=0, column=1, padx=(0,5))
 ttk.Button(bottom_frame, text="Launch Game").grid(row=0, column=2)
 
-
 # Sets scrollregion once all widgets are added
-for i in range(len(scrollable_frames)):
+for i, frame in enumerate(scrollable_frames):
     scrollable_frames[i].update_idletasks()
     canvases[i].configure(yscrollcommand=scrollbars[i].set, scrollregion=canvases[i].bbox("all"))
 
