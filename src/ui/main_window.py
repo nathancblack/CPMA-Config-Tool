@@ -14,7 +14,11 @@ style.theme_use('clam')
 style.configure("TNotebook.Tab", width=200, anchor="center", focuscolor="")
 bg_color = style.lookup('TFrame', 'background')
 
-
+style.map('TCombobox',
+    fieldbackground=[("readonly","white")],
+    selectbackground=[("readonly", "white")],
+    selectforeground=[("readonly", "black")]
+)
 
 main_frame = ttk.Frame(root, padding=(10))
 main_frame.grid(row=0, column=0, sticky="nsew")
@@ -76,9 +80,9 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
 
         # generates each setting option_box
         if dictionary[setting].get("type") == "discrete":
-            option_box = ttk.Combobox(scrollable_frames[i], values=([""] + dictionary[setting]["options"]), width=22)
+            option_box = ttk.Combobox(scrollable_frames[i], values=([""] + dictionary[setting]["options"]), state="readonly", width=22)
         elif dictionary[setting].get("type") == "bool":
-            option_box = ttk.Combobox(scrollable_frames[i], values=["","0","1"], width=22)
+            option_box = ttk.Combobox(scrollable_frames[i], values=["","0","1"], state="readonly", width=22)
         elif dictionary[setting].get("type") == "float" or "string":
             option_box = ttk.Entry(scrollable_frames[i], width=22)
         elif dictionary[setting].get("type") == "int":
