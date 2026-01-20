@@ -11,7 +11,9 @@ root.columnconfigure(0, weight=1)
 
 style = ttk.Style()
 style.theme_use('clam')
-style.configure("TNotebook.Tab", width=200, anchor="center")
+style.configure("TNotebook.Tab", width=200, anchor="center", focuscolor="")
+bg_color = style.lookup('TFrame', 'background')
+
 
 
 main_frame = ttk.Frame(root, padding=(10))
@@ -48,7 +50,7 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
     frames.append(frame)
     settings_notebook.add(frame, text=title)
 
-    canvas = tk.Canvas(frames[i])
+    canvas = tk.Canvas(frames[i], background=bg_color, highlightthickness=0)
     canvas.grid(row=0, column=0, sticky="nsew")
     canvases.append(canvas)
 
@@ -59,7 +61,7 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
     scrollable_frame = ttk.Frame(canvases[i], padding=10)
     scrollable_frames.append(scrollable_frame)
     canvases[i].create_window((0, 0), window=scrollable_frames[i], anchor="nw")
-    canvases[i].grid(padx=10, pady=(30,10))
+    canvases[i].grid(padx=10, pady=(20,10))
 
 
     # scrollable_frame widget generation
@@ -74,13 +76,13 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
 
         # generates each setting option_box
         if dictionary[setting].get("type") == "discrete":
-            option_box = ttk.Combobox(scrollable_frames[i], values=([""] + dictionary[setting]["options"]), width=15)
+            option_box = ttk.Combobox(scrollable_frames[i], values=([""] + dictionary[setting]["options"]), width=22)
         elif dictionary[setting].get("type") == "bool":
-            option_box = ttk.Combobox(scrollable_frames[i], values=["","0","1"], width=15)
+            option_box = ttk.Combobox(scrollable_frames[i], values=["","0","1"], width=22)
         elif dictionary[setting].get("type") == "float" or "string":
-            option_box = ttk.Entry(scrollable_frames[i], width=15)
+            option_box = ttk.Entry(scrollable_frames[i], width=22)
         elif dictionary[setting].get("type") == "int":
-            option_box = ttk.Entry(scrollable_frames[i], width=15)
+            option_box = ttk.Entry(scrollable_frames[i], width=22)
 
         # add vertical padding to the option_box unless its the last option_box in a tab
         if i2 == len(dictionary)-1:
