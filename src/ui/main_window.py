@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 from src.logic.settings import ALL_SETTINGS
 
@@ -27,6 +27,7 @@ main_frame.grid(row=0, column=0, sticky="nsew")
 main_frame.rowconfigure(1, weight=1)
 main_frame.columnconfigure(0, weight=1)
 
+# ADVANCED SETTINGS WINDOW
 def open_advanced_settings():
     advanced_settings = tk.Toplevel(root)
     advanced_settings.title("Advanced Settings")
@@ -59,9 +60,6 @@ def open_advanced_settings():
     frame3.columnconfigure(0, weight=1)
     ttk.Button(frame3, text="Uninstall CPMA Config Tool").grid(row=0, column=0, sticky="ew", pady=(0,5))
     ttk.Label(frame3, text="Completely removes the Config Tool and associated AppData", font=("TkDefaultFont", 8, "italic")).grid(row=1, column=0, sticky="ew")
-
-
-
 
 
 # TOP FRAME
@@ -145,12 +143,24 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
 
 # BOTTOM FRAME
 bottom_frame = ttk.Frame(main_frame, style="white.TFrame")
-bottom_frame.grid(row=2, column=0, sticky="e")
+bottom_frame.grid(row=2, column=0, sticky="nsew")
 bottom_frame.columnconfigure(0, weight=1)
 
-ttk.Button(bottom_frame, text="Save Config").grid(row=0, column=0, padx=(0,5))
-ttk.Button(bottom_frame, text="Export Config").grid(row=0, column=1, padx=(0,5))
-ttk.Button(bottom_frame, text="Launch Game").grid(row=0, column=2)
+left_frame = ttk.Frame(bottom_frame, style="white.TFrame")
+left_frame.grid(row=0, column=0, sticky="w")
+
+right_frame = ttk.Frame(bottom_frame, style="white.TFrame")
+right_frame.grid(row=0, column=1, sticky="e")
+
+def clear_inputs():
+    if messagebox.askyesno("Confirm", "Are you sure you want to make all the input boxes blank?"):
+        print("Cleared!") # temp
+
+ttk.Button(left_frame, text="Clear Inputs", command=clear_inputs).grid(row=0, column=0)
+ttk.Button(right_frame, text="Save Config").grid(row=0, column=0, padx=(0,5))
+ttk.Button(right_frame, text="Export Config").grid(row=0, column=1, padx=(0,5))
+ttk.Button(right_frame, text="Launch Game").grid(row=0, column=2)
+
 
 
 # Sets scrollregion once all widgets are added
