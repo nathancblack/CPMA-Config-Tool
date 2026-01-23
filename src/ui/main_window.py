@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-# from src.ui.functions import clear_inputs
 from src.logic.settings import ALL_SETTINGS
 
 root = tk.Tk()
@@ -183,17 +182,13 @@ def save_config():
         setting_value = group[2]
 
         dictionary[setting]["value"] = setting_value.get()
-        print(setting_value.get())
-        print(dictionary[setting]["value"])
 
 
-# for title, dictionary in ALL_SETTINGS:
-#     MOUSE_SETTINGS...VIDEO_SETTINGS...KEYBOARD_SETTINGS
-
-
-#                 for setting in dictionary.values():
-#                     print(setting["value"])
-#                     # setting["value"] = value
+def clear_inputs():
+    if messagebox.askyesno(
+        "Confirm", "Are you sure you want to make all the input boxes blank?"
+    ):
+        print("Cleared!")  # temp
 
 
 # BOTTOM FRAME
