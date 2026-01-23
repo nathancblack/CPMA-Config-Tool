@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-# from src.ui.functions import clear_inputs
+from src.ui.functions import clear_inputs
+
 from src.logic.settings import ALL_SETTINGS
 
 root = tk.Tk()
@@ -103,8 +104,8 @@ frames = []
 canvases = []
 scrollbars = []
 scrollable_frames = []
+GROUPED_OPTION_BOXES = []
 
-option_boxes = []
 for i, (title, dictionary) in enumerate(ALL_SETTINGS):
     frame = ttk.Frame(settings_notebook)
     frame.rowconfigure(0, weight=1)
@@ -126,6 +127,7 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
     canvases[i].grid(padx=10, pady=(20, 10))
 
     # scrollable_frame widget generation
+    option_boxes = []
     for i2, setting in enumerate(dictionary):
         # generates each setting label
         label = ttk.Label(
@@ -174,17 +176,26 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
             else:
                 label2 = ttk.Label(scrollable_frames[i], text=default)
             label2.grid(row=(i2 * 2) + 1, column=1, sticky="nw", padx=(40, 0))
+    GROUPED_OPTION_BOXES.append(option_boxes)
 
 
 def save_config():
-    for group in option_boxes:
+    for group in GROUPED_OPTION_BOXES:
         dictionary = group[0]
         setting = group[1]
-        setting_value = group[2]
+        setting_value = group[2].get()
 
-        dictionary[setting]["value"] = setting_value.get()
-        print(setting_value.get())
-        print(dictionary[setting]["value"])
+        dictionary[setting]["value"] = setting_value
+
+        print(setting_value)
+
+        # value = GROUPED_OPTION_BOXES[i][i2].get()
+        # if value:
+        #    print(setting, value)
+
+        # ALL_SETTINGS[i]["m_speed"]["value"] = value
+
+        #
 
 
 # for title, dictionary in ALL_SETTINGS:
