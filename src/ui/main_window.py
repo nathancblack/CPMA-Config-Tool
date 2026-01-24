@@ -179,9 +179,10 @@ def save_config():
     for group in option_boxes:
         dictionary = group[0]
         setting = group[1]
-        setting_value = group[2]
+        option_box = group[2]
 
-        dictionary[setting]["value"] = setting_value.get()
+        dictionary[setting]["value"] = option_box.get()
+    messagebox.showinfo("Config Saved", "Your config has been saved.")
 
 
 def clear_inputs():
