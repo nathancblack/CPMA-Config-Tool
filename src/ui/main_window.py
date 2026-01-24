@@ -176,13 +176,12 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
         # generates option_box range and default value for applicable settings
         if dictionary[setting].get("game_default"):
             default = f"Default: {dictionary[setting].get('game_default')}"
-            if dictionary[setting].get("min") and dictionary[setting].get("max"):
+            if dictionary[setting].get("max"):
                 range = f"Range: {dictionary[setting].get('min')} to {dictionary[setting].get('max')}"
-                label2 = ttk.Label(scrollable_frames[i], text=f"{range}, {default}")
+                label2 = ttk.Label(scrollable_frames[i], text=f"{range} {default}")
             else:
                 label2 = ttk.Label(scrollable_frames[i], text=default)
             label2.grid(row=(i2 * 2) + 1, column=1, sticky="nw", padx=(40, 0))
-
 
 def save_config():
     for group in option_boxes:
