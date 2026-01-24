@@ -88,7 +88,7 @@ MOUSE_SETTINGS = {
         "min": 60,
         "max": 250,
         "game_default": "125",
-        "description": "Max allowed framerate. It's highly recommended to only use 125 or 250 with V-Sync disabled.",
+        "description": "Max allowed framerate. Recommended to use 125 or 250 with V-Sync disabled.",
         "label": "Max FPS",
     },
 }
@@ -125,7 +125,7 @@ VIDEO_SETTINGS = {
         "value": None,
         "type": "bool",
         "game_default": "0",
-        "description": "Renders the diffuse textures only. Shaders with a lightmap stage will not draw the lightmap stage. Mutually exclusive with r_lightmap.",
+        "description": "Renders the diffuse textures only. Mutually exclusive with r_lightmap.",
         "label": "Fullbright",
     },
     "r_brightness": {
