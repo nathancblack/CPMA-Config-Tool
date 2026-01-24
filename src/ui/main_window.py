@@ -141,6 +141,7 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
         desc.grid(row=(i2 * 2), column=1, sticky="w", padx=(40, 0))
 
         # generates each setting option_box
+        value = dictionary[setting]["value"]
         if dictionary[setting].get("type") == "discrete":
             option_box = ttk.Combobox(
                 scrollable_frames[i],
@@ -148,14 +149,16 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
                 state="readonly",
                 width=22,
             )
+            if value:
+                option_box.set(value)
         elif dictionary[setting].get("type") == "bool":
-            option_box = ttk.Combobox(
-                scrollable_frames[i], values=["", "0", "1"], state="readonly", width=22
-            )
-        elif dictionary[setting].get("type") == "float" or "string":
+            option_box = ttk.Combobox(scrollable_frames[i], values=["", "0", "1"], state="readonly", width=22)
+            if value:
+                option_box.set(value)
+        elif dictionary[setting].get("type") == "float" or "string" or "int":
             option_box = ttk.Entry(scrollable_frames[i], width=22)
-        elif dictionary[setting].get("type") == "int":
-            option_box = ttk.Entry(scrollable_frames[i], width=22)
+            if value:
+                option_box.insert(0, value)
         option_boxes.append((dictionary, setting, option_box))
 
         # add vertical padding to the option_box unless its the last option_box in a tab
