@@ -85,7 +85,7 @@ top_frame.columnconfigure(0, weight=1)
 
 ttk.Label(
     top_frame,
-    text="Settings with blank input boxes will default to the value in your current config.\nIf the range shown next to a setting uses whole numbers, that setting only accepts whole numbers.\nIf the range includes decimals, that setting accepts decimal values."
+    text="Settings with blank input boxes will default to the value in your current config"
 ).grid(row=0, column=0, sticky="w")
 ttk.Button(top_frame, text="Advanced Settings", command=open_advanced_settings).grid(
     row=0, column=1, sticky="e"
