@@ -97,6 +97,12 @@ settings_notebook = ttk.Notebook(main_frame)
 settings_notebook.grid(row=1, column=0, sticky="nsew", pady=10)
 settings_notebook.columnconfigure(0, weight=1)
 
+# On tab change, set focus to the notebook itself instead of the first option_box
+def on_tab_change(event):
+    settings_notebook.focus_set()
+settings_notebook.bind("<<NotebookTabChanged>>", on_tab_change)
+
+
 # Generates notebook tab titles and contents
 frames = []
 canvases = []
