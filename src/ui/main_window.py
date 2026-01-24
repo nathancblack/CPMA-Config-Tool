@@ -185,10 +185,13 @@ def save_config():
 
 
 def clear_inputs():
-    if messagebox.askyesno(
-        "Confirm", "Are you sure you want to make all the input boxes blank?"
-    ):
-        print("Cleared!")  # temp
+    if messagebox.askyesno("Clear All", "This will clear all entered values. Continue?"):
+        for group in option_boxes:
+            option_box = group[2]
+            if type(option_box) == ttk.Combobox:
+                option_box.current(0)
+            elif type(option_box) == ttk.Entry:
+                option_box.delete(0, "end")
 
 
 # BOTTOM FRAME
