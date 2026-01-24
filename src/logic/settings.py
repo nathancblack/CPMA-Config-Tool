@@ -8,7 +8,7 @@ MOUSE_SETTINGS = {
         "label": "Mouse Input Mode",
     },
     "m_filter": {
-        "value": None,
+        "value": 5,
         "type": "bool",
         "game_default": "0",
         "description": "Mouse smoothing.",
@@ -24,7 +24,7 @@ MOUSE_SETTINGS = {
         "label": "Sensitivity",
     },
     "m_yaw": {
-        "value": None,
+        "value": 9,
         "type": "float",
         "min": -100.0,
         "max": 100.0,
@@ -825,7 +825,7 @@ KEYBIND_SETTINGS = {
         "value": "m",
         "label": "Load GUI Config",
     },
-    "weapon 1": {"value": None, "label": "Gauntlet"},
+    "weapon 1": {"value": "q", "label": "Gauntlet"},
     "weapon 2": {"value": None, "label": "Machine Gun"},
     "weapon 3": {"value": None, "label": "Shotgun"},
     "weapon 4": {"value": None, "label": "Grenade Launcher"},
