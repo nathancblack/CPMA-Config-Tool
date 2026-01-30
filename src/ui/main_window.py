@@ -185,10 +185,7 @@ for i, (title, dictionary) in enumerate(ALL_SETTINGS):
 
 def save_config():
     for group in option_boxes:
-        dictionary = group[0]
-        setting = group[1]
-        option_box = group[2]
-
+        dictionary, setting, option_box = group[0], group[1], group[2]
         dictionary[setting]["value"] = option_box.get()
     messagebox.showinfo("Config Saved", "Your config has been saved.")
 
