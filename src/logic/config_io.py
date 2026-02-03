@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from settings import (
+from src.logic.settings import (
     AUDIO_SETTINGS,
     HUD_SETTINGS,
     KEYBIND_SETTINGS,

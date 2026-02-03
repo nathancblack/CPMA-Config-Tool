@@ -1,7 +1,8 @@
 from pathlib import Path
-
+import tkinter as tk
 from src.logic.installer import InstallManager
 from src.logic.paths import PathManager
+from src.ui.main_window import ConfigApp 
 
 root_folder_path_windows = Path(
     "C:/Users/natha/Programming Projects/CPMA-Config-Tool/assets/q3"
@@ -19,30 +20,23 @@ root_folder_path_mac = Path(
     "/Users/nate/Programming/CPMA Config Tool/CPMA-Config-Tool/assets/Quake III Arena"
 )
 
-autoexec_cfg_path = Path(
-    "C:\\Users\\natha\\Programming Projects\\CPMA-Config-Tool\\assets\\q3\\cpma\\autoexec.cfg"
-)
 
 game_exe_path = Path(
-    "C:\\Users\\natha\\Programming Projects\\CPMA-Config-Tool\\assets\\q3\\cnq3-x64.exe"
+    "C:\\Users\\docker\\Desktop\\Shared\\CPMA-Config-Tool\\assets\\Quake III Arena\\cnq3-x64.exe"
 )
 
+root_path_linux = Path(
+    "C:\\Users\\docker\\Desktop\\Shared\\CPMA-Config-Tool\\assets\\Quake III Arena"
+)
 
 def main():
     path_manager = PathManager(project_assets_windows)
     install_manager = InstallManager(path_manager)
-
-    path_manager.paths["game_exe"] = str(game_exe_path)
-    path_manager.update_paths_json()
-    path_manager.launch_game()
-    # path_manager.auto_select_paths(root_folder_path_windows)
-    # install_manager.install_assets(project_assets_windows)
-
-    # install_manager.uninstall_assets()
-
-    # install_manager.uninstall_all()
-
-    # install_manager.change_assets_location(Path(project_assets_windows / "new"))
-
+    path_manager.auto_select_paths(root_path_linux)
+    path_manager.set_path("game_exe", game_exe_path)
+    root = tk.Tk()
+    app = ConfigApp(root, path_manager, install_manager)
+    root.mainloop()
+        
 
 main()
