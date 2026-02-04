@@ -22,6 +22,7 @@ class PathManager:
         self.update_paths_json()
 
     def get_path(self, path_name: str):
+        self.update_paths_dict()
         with open(self.app_path / "paths.json", "r") as f:
             data = json.load(f)
             return Path(data.get(path_name))
@@ -33,6 +34,7 @@ class PathManager:
     def update_paths_dict(self):
         with open(self.app_path / "paths.json", "r") as f:
             self.paths = json.load(f)
+            print(self.paths)
 
     def handle_autoexec(self, autoexec_cfg_path: Path):
         if not os.path.exists(autoexec_cfg_path):

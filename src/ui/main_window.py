@@ -1,6 +1,7 @@
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox, ttk, filedialog
 from pathlib import Path
+import shutil
 
 from src.logic.settings import ALL_SETTINGS
 from src.logic.paths import PathManager
@@ -169,7 +170,7 @@ class ConfigApp:
         ttk.Button(right_frame, text="Save Config", command=self.save_config).grid(
             row=0, column=0, padx=(0, 5)
         )
-        ttk.Button(right_frame, text="Export Config").grid(row=0, column=1, padx=(0, 5))
+        ttk.Button(right_frame, text="Export Config", command=lambda: self.export_config("Export Config")).grid(row=0, column=1, padx=(0, 5))
         ttk.Button(right_frame, text="Launch Game", command=self.launch_game).grid(row=0, column=2)
 
 
@@ -236,9 +237,10 @@ class ConfigApp:
     def save_config(self):
         for group in self.option_boxes:
             dictionary, setting, option_box = group[0], group[1], group[2]
-            dictionary[setting]["value"] = option_box.get()
-            self.path_manager.set_path("gui_cfg", Path(self.path_manager.get_path("cpma_folder")/"gui.cfg"))
-            dict_to_cfg(self.path_manager.get_path("gui_cfg"))
+            if option_box.get() != "":
+                dictionary[setting]["value"] = option_box.get()
+                self.path_manager.set_path("gui_cfg", Path(self.path_manager.get_path("cpma_folder")/"gui.cfg"))
+                dict_to_cfg(self.path_manager.get_path("gui_cfg"))
         messagebox.showinfo("Config Saved", "Your config has been saved.")
 
     def clear_inputs(self):
@@ -252,6 +254,15 @@ class ConfigApp:
 
     def launch_game(self):
         self.path_manager.launch_game()
+    
+    def export_config(self, button: string):
+        selected_folder = filedialog.askdirectory(
+            title=button,
+            mustexist=True,
+            initialdir="C:/Program Files (x86)",
+        )
+        shutil.copy2(self.path_manager.get_path("gui_cfg"), selected_folder)
+
 
     def on_mousewheel(self, event):
         current_tab = self.settings_notebook.index(self.settings_notebook.select())
