@@ -33,6 +33,7 @@ def main():
     path_manager = PathManager(project_assets_windows)
     install_manager = InstallManager(path_manager)
     path_manager.auto_select_paths(root_path_linux)
+    path_manager.set_path("assets", root_path_linux) 
     path_manager.set_path("game_exe", game_exe_path)
     root = tk.Tk()
     app = ConfigApp(root, path_manager, install_manager)

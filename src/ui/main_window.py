@@ -205,7 +205,7 @@ class ConfigApp:
         ttk.Label(frame1, text="Current CPMA Path").grid(
             row=0, column=0, sticky="ew", pady=(0, 5)
         )
-        ttk.Button(frame1, text="Change CPMA Location").grid(row=1, column=0, sticky="ew")
+        ttk.Button(frame1, text="Change CPMA Location", command=self.change_cpma_location).grid(row=1, column=0, sticky="ew")
 
         frame2 = ttk.Frame(main_frame, padding=10, relief="ridge")
         frame2.grid(row=1, column=0, sticky="nsew", pady=(0, 10))
@@ -255,14 +255,39 @@ class ConfigApp:
     def launch_game(self):
         self.path_manager.launch_game()
     
-    def export_config(self, button: string):
+    def export_config(self):
+        raw_path = self.path_manager.get_path("gui_cfg")
+        if not raw_path:
+            print("The config has not been generated yet.")
+            return
+
         selected_folder = filedialog.askdirectory(
-            title=button,
+            title="Export config",
             mustexist=True,
             initialdir="C:/Program Files (x86)",
         )
-        shutil.copy2(self.path_manager.get_path("gui_cfg"), selected_folder)
+        if selected_folder:
+                    try:
+                        shutil.copy2(raw_path, selected_folder)
+                        messagebox.showinfo("Success", f"Config exported to:\n{selected_folder}")
+                    except Exception as e:
+                        messagebox.showerror("Error", f"Failed to export file: {e}")
 
+
+    def change_cpma_location(self):
+        raw_path = Path(self.install_manager.data.paths["assets"])
+        if raw_path.exists:
+            selected_folder = filedialog.askdirectory(
+                title="Select new loaction for Q3 files",
+                mustexist=True,
+                initialdir="C:/Porgram Files (x86)",
+            )
+            if selected_folder:
+                self.install_manager.change_assets_location(selected_folder)
+            else:
+                print("Could not find selected folder")
+        else:
+            print("Game assets do not exist")
 
     def on_mousewheel(self, event):
         current_tab = self.settings_notebook.index(self.settings_notebook.select())

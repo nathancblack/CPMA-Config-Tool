@@ -16,6 +16,17 @@ class PathManager:
             "assets": "",
         }
         self._create_app_folder()
+         
+        if (self.app_path / "paths.json").exists():
+            try:
+                with open(self.app_path / "paths.json", "r") as f:
+                    saved_data = json.load(f)
+                    self.paths.update(saved_data)
+                    print("Loaded existing paths from paths.json")
+            except (json.JSONDecodeError, OSError):
+                print("Error loading JSON, starting with defaults.")
+        
+        self.update_paths_json()
 
     def set_path(self, path_name: str, path: Path):
         self.paths[path_name] = str(path)
