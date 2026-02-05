@@ -170,8 +170,8 @@ class ConfigApp:
         ttk.Button(right_frame, text="Save Config", command=self.save_config).grid(
             row=0, column=0, padx=(0, 5)
         )
-        ttk.Button(right_frame, text="Export Config", command=lambda: self.export_config("Export Config")).grid(row=0, column=1, padx=(0, 5))
-        ttk.Button(right_frame, text="Launch Game", command=self.launch_game).grid(row=0, column=2)
+        ttk.Button(right_frame, text="Export Config", command=lambda: self.export_config_button).grid(row=0, column=1, padx=(0, 5))
+        ttk.Button(right_frame, text="Launch Game", command=self.launch_game_button).grid(row=0, column=2)
 
 
         # Sets scrollregion once all widgets are added
@@ -205,12 +205,12 @@ class ConfigApp:
         ttk.Label(frame1, text="Current CPMA Path").grid(
             row=0, column=0, sticky="ew", pady=(0, 5)
         )
-        ttk.Button(frame1, text="Change CPMA Location", command=self.change_cpma_location).grid(row=1, column=0, sticky="ew")
+        ttk.Button(frame1, text="Change CPMA Location", command=self.change_assets_location_button).grid(row=1, column=0, sticky="ew")
 
         frame2 = ttk.Frame(main_frame, padding=10, relief="ridge")
         frame2.grid(row=1, column=0, sticky="nsew", pady=(0, 10))
         frame2.columnconfigure(0, weight=1)
-        ttk.Button(frame2, text="Install Game Assets").grid(
+        ttk.Button(frame2, text="Install Game Assets", command=self.install_assets_button).grid(
             row=0, column=0, sticky="ew", pady=(0, 5)
         )
         ttk.Label(
@@ -222,7 +222,7 @@ class ConfigApp:
         frame3 = ttk.Frame(main_frame, padding=10, relief="ridge")
         frame3.grid(row=2, column=0, sticky="nsew")
         frame3.columnconfigure(0, weight=1)
-        ttk.Button(frame3, text="Uninstall CPMA Config Tool").grid(
+        ttk.Button(frame3, text="Uninstall CPMA Config Tool", command=self.uninstall_all_button).grid(
             row=0, column=0, sticky="ew", pady=(0, 5)
         )
         ttk.Label(
@@ -252,10 +252,10 @@ class ConfigApp:
                 elif type(option_box) == ttk.Entry:
                     option_box.delete(0, "end")
 
-    def launch_game(self):
+    def launch_game_button(self):
         self.path_manager.launch_game()
     
-    def export_config(self):
+    def export_config_button(self):
         raw_path = self.path_manager.get_path("gui_cfg")
         if not raw_path:
             print("The config has not been generated yet.")
@@ -274,11 +274,11 @@ class ConfigApp:
                         messagebox.showerror("Error", f"Failed to export file: {e}")
 
 
-    def change_cpma_location(self):
+    def change_assets_location_button(self):
         raw_path = Path(self.install_manager.data.paths["assets"])
         if raw_path.exists:
             selected_folder = filedialog.askdirectory(
-                title="Select new loaction for Q3 files",
+                title="Select new location for Q3 files",
                 mustexist=True,
                 initialdir="C:/Porgram Files (x86)",
             )
@@ -288,6 +288,19 @@ class ConfigApp:
                 print("Could not find selected folder")
         else:
             print("Game assets do not exist")
+    
+
+    def install_assets_button(self):
+        selected_folder = filedialog.askdirectory(
+            title="Select location for Q3 files to be installed",
+            mustexist=True,
+            initialdir="C:/Porgram Files (x86)",
+        )
+        self.install_manager.install_assets(selected_folder)
+
+    def uninstall_all_button(self):
+        self.install_manager.uninstall_all()
+
 
     def on_mousewheel(self, event):
         current_tab = self.settings_notebook.index(self.settings_notebook.select())
