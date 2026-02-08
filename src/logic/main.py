@@ -20,7 +20,6 @@ root_folder_path_mac = Path(
     "/Users/nate/Programming/CPMA Config Tool/CPMA-Config-Tool/assets/Quake III Arena"
 )
 
-
 game_exe_path = Path(
     "C:\\Users\\docker\\Desktop\\Shared\\CPMA-Config-Tool\\assets\\Quake III Arena\\cnq3-x64.exe"
 )
