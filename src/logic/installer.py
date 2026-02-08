@@ -12,20 +12,23 @@ class InstallManager:
     def install_assets(self, location=None):
         if location is None:
             location = self.data.app_path  # Install to local app data by default
-        URL = "https://github.com/nathancblack/CPMA-Config-Tool/releases/latest/download/assets.zip"
-        zip_path = Path(location) / "assets.zip"
+        URL = "https://github.com/nathancblack/CPMA-Config-Tool/releases/latest/download/Q3.zip"
+        zip_path = Path(location) / "Q3.zip"
         with requests.get(URL, stream=True) as r:
+            r.raise_for_status()
             with open(zip_path, "wb") as f:
                 shutil.copyfileobj(r.raw, f)
         shutil.unpack_archive(zip_path, location)
         os.remove(zip_path)
-        self.data.paths["assets"] = str(Path(location) / "content")
+        game_root = Path(location) / "Q3"
+        self.data.paths["assets"] = str(game_root)
+        self.data.auto_select_paths(game_root)
         self.data.update_paths_json()
 
     def change_assets_location(self, destination: Path):
         self.data.update_paths_dict()
         shutil.move(self.data.paths["assets"], destination)
-        self.data.paths["assets"] = str(Path(destination) / "Quake III Arena")
+        self.data.paths["assets"] = str(Path(destination) / "Q3")
         # How to handle updating paths.json?
         # Call auto_select_paths() here or UI ?
         self.data.update_paths_json()
