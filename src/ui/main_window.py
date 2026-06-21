@@ -19,9 +19,33 @@ class ConfigApp:
 
         self.path_manager = path_manager
         self.install_manager = install_manager
-        
+
+        # Populate setting values from any existing gui.cfg before building widgets.
+        self.load_existing_config()
 
         self.setup_ui()
+
+        # Prompt for the Quake III Arena folder on first run.
+        self.root.after(200, self.check_first_run)
+
+    def load_existing_config(self):
+        cpma_folder = self.path_manager.get_path("cpma_folder")
+        if not cpma_folder:
+            return
+        gui_cfg = Path(cpma_folder) / "gui.cfg"
+        if gui_cfg.exists():
+            cfg_to_dict(gui_cfg)
+
+    def check_first_run(self):
+        if self.path_manager.is_configured():
+            return
+        if messagebox.askyesno(
+            "Welcome to CPMA Config Tool",
+            "No Quake III Arena folder is configured yet.\n\n"
+            "Would you like to locate it now?\n\n"
+            "(You can also install the game assets later from Advanced Settings.)",
+        ):
+            self.set_q3_folder_button()
 
     def setup_ui(self):
         self.root.title("CPMA Config Tool")
@@ -133,7 +157,8 @@ class ConfigApp:
                     option_box = ttk.Combobox(self.scrollable_frames[i], values=["", "0", "1"], state="readonly", width=22)
                     if value:
                         option_box.set(value)
-                elif dictionary[setting].get("type") == "float" or "string" or "int":
+                else:
+                    # float / int / string cvars and keybinds (no "type") use a text entry
                     option_box = ttk.Entry(self.scrollable_frames[i], width=22)
                     if value:
                         option_box.insert(0, value)
@@ -170,7 +195,7 @@ class ConfigApp:
         ttk.Button(right_frame, text="Save Config", command=self.save_config).grid(
             row=0, column=0, padx=(0, 5)
         )
-        ttk.Button(right_frame, text="Export Config", command=lambda: self.export_config_button).grid(row=0, column=1, padx=(0, 5))
+        ttk.Button(right_frame, text="Export Config", command=self.export_config_button).grid(row=0, column=1, padx=(0, 5))
         ttk.Button(right_frame, text="Launch Game", command=self.launch_game_button).grid(row=0, column=2)
 
 
@@ -188,27 +213,39 @@ class ConfigApp:
     def open_advanced_settings(self):
         advanced_settings = tk.Toplevel(self.root)
         advanced_settings.title("Advanced Settings")
-        advanced_settings.geometry("400x300")
+        advanced_settings.geometry("420x380")
         advanced_settings.rowconfigure(0, weight=1)
         advanced_settings.columnconfigure(0, weight=1)
 
         main_frame = ttk.Frame(advanced_settings, padding=10, style="white.TFrame")
         main_frame.grid(row=0, column=0, sticky="nsew")
-        main_frame.rowconfigure(0, weight=1)
-        main_frame.rowconfigure(1, weight=1)
-        main_frame.rowconfigure(2, weight=1)
+        for r in range(4):
+            main_frame.rowconfigure(r, weight=1)
         main_frame.columnconfigure(0, weight=1)
 
+        frame0 = ttk.Frame(main_frame, padding=10, relief="ridge")
+        frame0.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
+        frame0.columnconfigure(0, weight=1)
+        current_root = self.path_manager.paths.get("root_folder") or "(not set)"
+        ttk.Label(frame0, text=f"Quake III Arena folder:\n{current_root}").grid(
+            row=0, column=0, sticky="ew", pady=(0, 5)
+        )
+        ttk.Button(
+            frame0,
+            text="Set Quake III Arena Folder",
+            command=self.set_q3_folder_button,
+        ).grid(row=1, column=0, sticky="ew")
+
         frame1 = ttk.Frame(main_frame, padding=10, relief="ridge")
-        frame1.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
+        frame1.grid(row=1, column=0, sticky="nsew", pady=(0, 10))
         frame1.columnconfigure(0, weight=1)
-        ttk.Label(frame1, text="Current CPMA Path").grid(
+        ttk.Label(frame1, text="Move installed game files to a new location").grid(
             row=0, column=0, sticky="ew", pady=(0, 5)
         )
         ttk.Button(frame1, text="Change CPMA Location", command=self.change_assets_location_button).grid(row=1, column=0, sticky="ew")
 
         frame2 = ttk.Frame(main_frame, padding=10, relief="ridge")
-        frame2.grid(row=1, column=0, sticky="nsew", pady=(0, 10))
+        frame2.grid(row=2, column=0, sticky="nsew", pady=(0, 10))
         frame2.columnconfigure(0, weight=1)
         ttk.Button(frame2, text="Install Game Assets", command=self.install_assets_button).grid(
             row=0, column=0, sticky="ew", pady=(0, 5)
@@ -220,7 +257,7 @@ class ConfigApp:
         ).grid(row=1, column=0, sticky="ew")
 
         frame3 = ttk.Frame(main_frame, padding=10, relief="ridge")
-        frame3.grid(row=2, column=0, sticky="nsew")
+        frame3.grid(row=3, column=0, sticky="nsew")
         frame3.columnconfigure(0, weight=1)
         ttk.Button(frame3, text="Uninstall CPMA Config Tool", command=self.uninstall_all_button).grid(
             row=0, column=0, sticky="ew", pady=(0, 5)
@@ -235,12 +272,27 @@ class ConfigApp:
         self.settings_notebook.focus_set()
 
     def save_config(self):
-        for group in self.option_boxes:
-            dictionary, setting, option_box = group[0], group[1], group[2]
+        cpma_folder = self.path_manager.get_path("cpma_folder")
+        if not cpma_folder:
+            messagebox.showwarning(
+                "Not Configured",
+                "Set your Quake III Arena (CPMA) folder first via Advanced Settings.",
+            )
+            return
+
+        for dictionary, setting, option_box in self.option_boxes:
             if option_box.get() != "":
                 dictionary[setting]["value"] = option_box.get()
-                self.path_manager.set_path("gui_cfg", Path(self.path_manager.get_path("cpma_folder")/"gui.cfg"))
-                dict_to_cfg(self.path_manager.get_path("gui_cfg"))
+
+        gui_cfg = Path(cpma_folder) / "gui.cfg"
+        try:
+            self.path_manager.set_path("gui_cfg", gui_cfg)
+            dict_to_cfg(gui_cfg)
+            # Make sure the game actually loads the generated config.
+            self.path_manager.handle_autoexec(Path(cpma_folder) / "autoexec.cfg")
+        except OSError as e:
+            messagebox.showerror("Error", f"Failed to save config:\n{e}")
+            return
         messagebox.showinfo("Config Saved", "Your config has been saved.")
 
     def clear_inputs(self):
@@ -253,53 +305,116 @@ class ConfigApp:
                     option_box.delete(0, "end")
 
     def launch_game_button(self):
-        self.path_manager.launch_game()
-    
+        if not self.path_manager.launch_game():
+            messagebox.showwarning(
+                "Cannot Launch",
+                "The game executable was not found.\n\n"
+                "Set your Quake III Arena folder or install the game assets "
+                "from Advanced Settings.",
+            )
+
     def export_config_button(self):
         raw_path = self.path_manager.get_path("gui_cfg")
-        if not raw_path:
-            print("The config has not been generated yet.")
+        if not raw_path or not Path(raw_path).exists():
+            messagebox.showwarning(
+                "Nothing to Export",
+                "Save your config first before exporting it.",
+            )
             return
 
         selected_folder = filedialog.askdirectory(
             title="Export config",
             mustexist=True,
-            initialdir="C:/Program Files (x86)",
+            initialdir=str(Path.home()),
         )
         if selected_folder:
-                    try:
-                        shutil.copy2(raw_path, selected_folder)
-                        messagebox.showinfo("Success", f"Config exported to:\n{selected_folder}")
-                    except Exception as e:
-                        messagebox.showerror("Error", f"Failed to export file: {e}")
+            try:
+                shutil.copy2(raw_path, selected_folder)
+                messagebox.showinfo("Success", f"Config exported to:\n{selected_folder}")
+            except OSError as e:
+                messagebox.showerror("Error", f"Failed to export file: {e}")
 
+    def set_q3_folder_button(self):
+        selected_folder = filedialog.askdirectory(
+            title="Select your Quake III Arena folder (the one containing 'cpma')",
+            mustexist=True,
+            initialdir=str(Path.home()),
+        )
+        if not selected_folder:
+            return
+
+        root_folder = Path(selected_folder)
+        missing = self.path_manager.auto_select_paths(root_folder)
+
+        # Try to locate a game executable in the chosen folder.
+        for candidate in (
+            "cnq3-x64.exe",
+            "cnq3-x86.exe",
+            "cnq3-x64",
+            "quake3e.x64.exe",
+            "quake3.exe",
+        ):
+            if (root_folder / candidate).exists():
+                self.path_manager.set_path("game_exe", root_folder / candidate)
+                break
+
+        if "cpma_folder" in missing:
+            messagebox.showwarning(
+                "Folder Set",
+                "Folder saved, but no 'cpma' subfolder was found there.\n\n"
+                "Make sure you selected your Quake III Arena folder.",
+            )
+        else:
+            messagebox.showinfo(
+                "Folder Set", "Quake III Arena folder configured successfully."
+            )
 
     def change_assets_location_button(self):
-        raw_path = Path(self.install_manager.data.paths["assets"])
-        if raw_path.exists:
-            selected_folder = filedialog.askdirectory(
-                title="Select new location for Q3 files",
-                mustexist=True,
-                initialdir="C:/Porgram Files (x86)",
+        assets = self.install_manager.data.paths.get("assets", "")
+        if not assets or not Path(assets).exists():
+            messagebox.showwarning(
+                "No Game Files",
+                "There are no installed game files to move.\n\n"
+                "Install the game assets first.",
             )
-            if selected_folder:
-                self.install_manager.change_assets_location(selected_folder)
-            else:
-                print("Could not find selected folder")
-        else:
-            print("Game assets do not exist")
-    
+            return
+
+        selected_folder = filedialog.askdirectory(
+            title="Select new location for Q3 files",
+            mustexist=True,
+            initialdir=str(Path.home()),
+        )
+        if selected_folder:
+            try:
+                self.install_manager.change_assets_location(Path(selected_folder))
+                messagebox.showinfo("Done", "Game files moved successfully.")
+            except OSError as e:
+                messagebox.showerror("Error", f"Failed to move files:\n{e}")
 
     def install_assets_button(self):
         selected_folder = filedialog.askdirectory(
             title="Select location for Q3 files to be installed",
             mustexist=True,
-            initialdir="C:/Porgram Files (x86)",
+            initialdir=str(Path.home()),
         )
-        self.install_manager.install_assets(selected_folder)
+        if not selected_folder:
+            return
+        try:
+            self.install_manager.install_assets(selected_folder)
+            messagebox.showinfo(
+                "Install Complete", "Quake III Arena + CPMA files installed."
+            )
+        except Exception as e:
+            messagebox.showerror("Install Failed", f"Could not install assets:\n{e}")
 
     def uninstall_all_button(self):
-        self.install_manager.uninstall_all()
+        if messagebox.askyesno(
+            "Uninstall",
+            "This will remove the CPMA Config Tool's saved data (paths and "
+            "downloaded files in AppData). Continue?",
+        ):
+            self.install_manager.uninstall_all()
+            messagebox.showinfo("Uninstalled", "CPMA Config Tool data removed.")
 
 
     def on_mousewheel(self, event):

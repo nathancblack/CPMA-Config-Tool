@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 
@@ -27,6 +28,10 @@ class PathManager:
                 print("Error loading JSON, starting with defaults.")
         
         self.update_paths_json()
+
+    def is_configured(self):
+        root = self.paths.get("root_folder", "")
+        return root != "" and os.path.exists(root)
 
     def set_path(self, path_name: str, path: Path):
         self.paths[path_name] = str(path)
@@ -56,18 +61,17 @@ class PathManager:
                 f.write("\nexec gui")
 
     def _create_app_folder(self):
-        path = os.getenv("LOCALAPPDATA")
-        if path:
-            path = Path(path) / "CPMA Config Tool"
-            self.app_path = path
-            if not os.path.exists(path):
-                os.mkdir(path)
-                print(path)
-            else:
-                print("Folder already exists")
-
+        if sys.platform == "win32":
+            base = os.getenv("LOCALAPPDATA") or os.path.expanduser("~")
+        elif sys.platform == "darwin":
+            base = os.path.join(os.path.expanduser("~"), "Library", "Application Support")
         else:
-            print("Could not find Local App Data")
+            base = os.getenv("XDG_DATA_HOME") or os.path.join(
+                os.path.expanduser("~"), ".local", "share"
+            )
+
+        self.app_path = Path(base) / "CPMA Config Tool"
+        self.app_path.mkdir(parents=True, exist_ok=True)
 
     def auto_select_paths(self, root_folder: Path):
         missing = []
@@ -86,4 +90,9 @@ class PathManager:
 
     def launch_game(self):
         self.update_paths_dict()
-        subprocess.run(self.paths["game_exe"])
+        exe = self.paths.get("game_exe", "")
+        if not exe or not os.path.exists(exe):
+            return False
+        # Run from the game directory so Quake can locate its files.
+        subprocess.Popen([exe], cwd=str(Path(exe).parent))
+        return True

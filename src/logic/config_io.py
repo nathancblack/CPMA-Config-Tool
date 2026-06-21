@@ -53,27 +53,3 @@ def cfg_to_dict(gui_path: Path):
                     value["value"] = seta_dict[setting]
                 if setting in bind_dict and group == KEYBIND_SETTINGS:
                     value["value"] = bind_dict[setting]
-
-
-# Testing functions
-def test_read_write():
-    gui_cfg = Path(
-        "C:\\Users\\natha\\Programming Projects\\CPMA-Config-Tool\\assets\\q3\\cpma\\gui.cfg"
-    )
-    test_path = Path(
-        "C:\\Users\\natha\\Programming Projects\\CPMA-Config-Tool\\src\\logic\\test.cfg"
-    )
-    cfg_to_dict(gui_cfg)
-    dict_to_cfg(test_path)
-
-
-# test_read_write()
-
-
-def see_dict_values():
-    for group in SETTINGS:
-        for setting in group.items():
-            print(setting)
-
-
-# see_dict_values()

@@ -23,14 +23,16 @@ class InstallManager:
         game_root = Path(location) / "Q3"
         self.data.paths["assets"] = str(game_root)
         self.data.auto_select_paths(game_root)
+        self.data.paths["game_exe"] = str(game_root / "cnq3-x64.exe")
         self.data.update_paths_json()
 
     def change_assets_location(self, destination: Path):
         self.data.update_paths_dict()
         shutil.move(self.data.paths["assets"], destination)
-        self.data.paths["assets"] = str(Path(destination) / "Q3")
-        # How to handle updating paths.json?
-        # Call auto_select_paths() here or UI ?
+        game_root = Path(destination) / "Q3"
+        self.data.paths["assets"] = str(game_root)
+        self.data.auto_select_paths(game_root)
+        self.data.paths["game_exe"] = str(game_root / "cnq3-x64.exe")
         self.data.update_paths_json()
 
     def uninstall_assets(self):
